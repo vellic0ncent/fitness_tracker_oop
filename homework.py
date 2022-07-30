@@ -96,7 +96,7 @@ class SportsWalking(Training):
 
     LEN_STEP = .65
     SPENT_CALORIE_X1: float = .035
-    SEPNT_CALORIE_X2: float = .029
+    SPENT_CALORIE_X2: float = .029
     MINUTES_IN_HOUR: int = 60
 
     def __init__(self,
@@ -111,7 +111,7 @@ class SportsWalking(Training):
         """Evaluate with special sport walking coefficients."""
         return ((self.SPENT_CALORIE_X1 * self.weight_kg
                 + (self.get_mean_speed() ** 2 // self.height_sm)
-                * self.SEPNT_CALORIE_X2 * self.weight_kg)
+                * self.SPENT_CALORIE_X2 * self.weight_kg)
                 * self.duration_hrs * self.MINUTES_IN_HOUR)
 
 
