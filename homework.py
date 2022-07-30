@@ -1,45 +1,27 @@
 import importlib
 from typing import Dict, Callable, Tuple, List
-# from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
-# @dataclass
+@dataclass
 class InfoMessage:
-    """Information message about training.
+    """Information message about training."""
 
-    Parameters
-    ----------
-    training_type : str
-        Name of training based on class name inherited from Training.
+    training_type: str
     duration: float
-        Duration of training in hrs.
     distance: float
-        Distance in km passed during training.
     speed: float
-        Average speed during training.
     calories: float
-        N of calories lost during training.
-    """
-
-    def __init__(self,
-                 training_type: str,
-                 duration: float,
-                 distance: float,
-                 speed: float,
-                 calories: float):
-        self.training_type: str = training_type
-        self.duration: str = "{0:.3f}".format(duration)
-        self.distance: str = "{0:.3f}".format(distance)
-        self.speed: str = "{0:.3f}".format(speed)
-        self.calories: str = "{0:.3f}".format(calories)
 
     def get_message(self) -> str:
         """Get sketched message."""
-        return (f'Тип тренировки: {self.training_type}; '
-                f'Длительность: {self.duration} ч.; '
-                f'Дистанция: {self.distance} км; '
-                f'Ср. скорость: {self.speed} км/ч; '
-                f'Потрачено ккал: {self.calories}.')
+        return (
+            'Тип тренировки: {}; '
+            'Длительность: {:.3f} ч.; '
+            'Дистанция: {:.3f} км; '
+            'Ср. скорость: {:.3f} км/ч; '
+            'Потрачено ккал: {:.3f}.'.format(*asdict(self).values())
+        )
 
 
 class Training:
@@ -81,11 +63,11 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Show message about training."""
-        return InfoMessage(training_type=type(self).__name__,
-                           duration=self.duration,
-                           distance=self.get_distance(),
-                           speed=self.get_mean_speed(),
-                           calories=self.get_spent_calories())
+        return InfoMessage(type(self).__name__,
+                           self.duration,
+                           self.get_distance(),
+                           self.get_mean_speed(),
+                           self.get_spent_calories())
 
 
 class Running(Training):
@@ -131,8 +113,8 @@ class SportsWalking(Training):
         """Evaluate with special sport walking coefficients."""
         mean_speed: float = self.get_mean_speed()
         return ((self.coef_calorie_1 * self.weight
-                + (mean_speed ** 2 // self.height)
-                * self.coef_calorie_2 * self.weight)
+                 + (mean_speed ** 2 // self.height)
+                 * self.coef_calorie_2 * self.weight)
                 * self.duration * self.minutes_in_hour)
 
 
