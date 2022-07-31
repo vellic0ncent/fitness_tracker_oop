@@ -1,4 +1,4 @@
-from typing import Dict, Callable, Tuple, List, Union
+from typing import Dict, Tuple, List, Union
 from dataclasses import dataclass, asdict
 
 
