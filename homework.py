@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, List, Union
+from typing import Dict, Tuple, List, Union, Type
 from dataclasses import dataclass, asdict
 
 
@@ -109,8 +109,8 @@ class SportsWalking(Training):
     def get_spent_calories(self) -> float:
         """Evaluate with special sport walking coefficients."""
         return ((self.CALORIE_MULTIPLIER * self.weight
-                 + (self.get_mean_speed() ** 2 // self.height)
-                 * self.CALORIE_BIAS * self.weight)
+                + (self.get_mean_speed() ** 2 // self.height)
+                * self.CALORIE_BIAS * self.weight)
                 * self.duration * self.MINUTES_IN_HOUR)
 
 
@@ -150,12 +150,15 @@ class Swimming(Training):
                 / self.M_IN_KM / self.duration)
 
 
-def read_package(workout_type: str, data: list) -> Union[Training, KeyError]:
+def read_package(workout_type: str, data: list) -> Union[Training, ValueError]:
     """Read the data received from the sensors."""
-    workouts: Dict[str, Training] = dict(SWM=Swimming,
-                                         RUN=Running,
-                                         WLK=SportsWalking)
-    return workouts.get(workout_type, KeyError)(*data)
+    workouts: Dict[str, Type[Training]] = dict(SWM=Swimming,
+                                               RUN=Running,
+                                               WLK=SportsWalking)
+    if workout_type in workouts:
+        return workouts[workout_type](*data)
+    else:
+        raise ValueError
 
 
 def main(training: Training) -> None:
